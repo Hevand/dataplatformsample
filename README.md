@@ -12,53 +12,37 @@ To address this need, ISVs look for simple and fast ways of addressing this chal
 ### 1. Share the database backup files
 Backup files are  available for download. Customer restores backup in their own environment. 
 
-_Benefits_:
-- Easy setup
-- Low maintenance
-- No impact on production
-- No developer involvement 
-
-_Drawbacks_:
-- Customer dependency on application schema / understanding
-- Customer has access to all data
-- Introducing polyglot persistance is no longer possible / becomes more complex
-- Reporting scenarios only
-- No real-time reporting
-- Increased backup storage costs
-- Complications when using multi-tenant database
-- Customer effort in setting up infrastructure
-- No developer ownership (versioning, clarity, correctness)
+| Benefits | Drawbacks |
+| --- | --- |
+| - Easy setup for ISV | - Tightly coupled with application schema |
+| - Low maintenance | - Customer has unrestricted access to all data |
+| - No production impact | - Storage-level optimization (polyglot) no longer possible |
+| - No developer involvement | - Reporting Scenarios only
+|| - No real-time reporting |
+|| - Increased backup storage costs |
+|| - Complications when using multi-tenant (shared) database |
+|| - Customer effort in setting up infrastructure |
+|| - Lack of ISV ownership (versioning, clarity, correctness) |
 
 ### 2. Replicate the database, give (read-only) access
 A secondary instance of the database is created and kept in sync with production. This replica is used for read-only / reporting needs. The customer can setup a direct connection. 
 
-_Benefits_:
-- Easy setup
-- Low maintenance
-- Can share database views / procedures, instead of raw tables
-- No impact on production
-
-_Drawbacks_:
-- Customer dependency on application schema / understanding
-- No polyglot persistance
-- Reporting scenarios only
-- (Potentially) increased licensing costs
-- Increased (private) network complexity, or exposed via internet
-- Complications when using multi-tenant database
+| Benefits | Drawbacks |
+| --- | --- |
+| - Easy setup for both parties | - Storage-level optimization (polyglot) no longer possible |
+| - Low maintenance |  - Reporting Scenarios only |
+| - No production impact | - No real-time reporting |
+| - Limit to curated views / procedures / versioning possible |- Complications when using multi-tenant (shared) database |
 
 ### 3. Reuse existing application APIs
 The customer uses the APIs that were designed / planned for internal use. 
 
-_Benefits_: 
-- Readily available
-- Abstraction over application schema
-- Adheres to multi-tenancy model
-- No developer involvement
-
-_Drawbacks_:
-- Undocumented APIs
-- Reliability and versioning complications, as development team isn't aware
-- Additional load on production system
+| Benefits | Drawbacks |
+| --- | --- |
+|- Readily available| - Undocumented APIs |
+|- Abstraction over application schema| - Reliability and versioning complications, as development team is not involved |
+|- Adheres to multi-tenancy model| - Additional, non-distinguishable load on production system |
+|- No developer involvement||
 
 ## What's in here
 In this repository, we're following an alternative approach based on the following architecture: 
