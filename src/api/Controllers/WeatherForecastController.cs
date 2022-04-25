@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using Microsoft.Identity.Web.Resource;
 
 namespace api.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     [ApiController]
     [Route("[controller]")]
-    [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+    //[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
@@ -23,6 +24,7 @@ namespace api.Controllers
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
+        [EnableQuery]
         public IEnumerable<WeatherForecast> Get()
         {
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
