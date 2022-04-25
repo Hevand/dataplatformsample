@@ -44,12 +44,23 @@ The customer uses the APIs that were designed / planned for internal use.
 |- Adheres to multi-tenancy model| - Additional, non-distinguishable load on production system |
 |- No developer involvement||
 
+
+
+
+
+
+
+
 ## What's in here
 In this repository, we're following an alternative approach based on the following architecture: 
 
 0. **Preparation**: Setting up the core infrastructure required to support the full architecture. We'll do this first, such that later steps only need to consider configuration and content.
 Topics: 
     - Bicep
+
+[![Deploy To Azure](https://docs.microsoft.com/en-us/azure/templates/media/deploy-to-azure.svg)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FHevand%2Fdataplatformsample%2Fmain%2F.build%2Fenvironment.json)
+
+
 0. **API**: Build and deploy an API for basic read/write operations. Setup API management to control access. Topics included:         
     - Product management
     - Discoverability
@@ -75,3 +86,47 @@ Topics:
     - Start / Stop
 0. **Create event-based model**: Event-based processing of data in the customer database. Update CosmosDB data store. Expose via api management.
 
+
+# scratchpad
+
+## Key success criteria
+- backwards compatibility
+    - how to approach?
+- cost
+    - 
+- onboarding
+    - 
+
+
+## Scenarios
+
+actoren
+1. business analyst
+2. data scientist
+3. power user
+4. integration developer
+5. 
+
+scenarios
+1. Customizations
+2. Rapportage (e.g. PowerBI Reporting, customer licensed)
+3. Custom connector (get data) - API
+
+approach
+1. api (openapi)
+    - odata
+    - rest
+    - webhooks
+2. business model
+3. repository
+
+dimensions
+
+4. time. growth path (costs)
+    - upsize production
+    - caching
+    - per customer
+
+
+
+## An alternative approach
