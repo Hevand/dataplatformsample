@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "9316566112516521078"
+      "templateHash": "17848707983951246814"
     }
   },
   "parameters": {
@@ -58,6 +58,9 @@
         "parameters": {
           "location": {
             "value": "[parameters('location')]"
+          },
+          "environment": {
+            "value": "dev"
           }
         },
         "template": {
@@ -67,7 +70,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "14139390549305298817"
+              "templateHash": "17587316084516777057"
             }
           },
           "parameters": {
@@ -78,16 +81,29 @@
                 "description": "Location for all resources."
               }
             },
+            "environment": {
+              "type": "string",
+              "defaultValue": "prod",
+              "allowedValues": [
+                "dev",
+                "test",
+                "qa",
+                "prod"
+              ],
+              "metadata": {
+                "description": "Environment in which the resources are deployed"
+              }
+            },
             "appServicePlanName": {
               "type": "string",
-              "defaultValue": "[toLower(format('{0}-asp-{1}', resourceGroup().name, parameters('location')))]",
+              "defaultValue": "[toLower(format('asp-{0}-{1}-{2}-001', resourceGroup().name, parameters('environment'), parameters('location')))]",
               "metadata": {
                 "description": "The name of the app service plan"
               }
             },
             "webAppName": {
               "type": "string",
-              "defaultValue": "[toLower(format('{0}-app-{1}', resourceGroup().name, parameters('location')))]",
+              "defaultValue": "[toLower(format('app-{0}-{1}-001', resourceGroup().name, parameters('environment')))]",
               "metadata": {
                 "description": "The name of the web app"
               }
@@ -174,6 +190,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "environment": {
+            "value": "dev"
           }
         },
         "template": {
@@ -183,7 +202,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "8632169069504507445"
+              "templateHash": "3592809024031847905"
             }
           },
           "parameters": {
@@ -229,9 +248,22 @@
                 "description": "Location for all resources."
               }
             },
+            "environment": {
+              "type": "string",
+              "defaultValue": "prod",
+              "allowedValues": [
+                "dev",
+                "test",
+                "qa",
+                "prod"
+              ],
+              "metadata": {
+                "description": "Environment in which the resources are deployed"
+              }
+            },
             "name": {
               "type": "string",
-              "defaultValue": "[format('{0}-apim-{1}', resourceGroup().name, parameters('location'))]",
+              "defaultValue": "[format('apim-{0}-{1}', resourceGroup().name, parameters('environment'))]",
               "metadata": {
                 "description": "The name of the API management instance"
               }
@@ -277,6 +309,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "environment": {
+            "value": "dev"
           }
         },
         "template": {
@@ -286,7 +321,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "11921905331842138621"
+              "templateHash": "10924672823915917132"
             }
           },
           "parameters": {
@@ -297,9 +332,22 @@
                 "description": "Location where the databases are created"
               }
             },
+            "environment": {
+              "type": "string",
+              "defaultValue": "prod",
+              "allowedValues": [
+                "dev",
+                "test",
+                "qa",
+                "prod"
+              ],
+              "metadata": {
+                "description": "Environment in which the resources are deployed"
+              }
+            },
             "serverName": {
               "type": "string",
-              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "defaultValue": "[format('sql-{0}-{1}-{2}', resourceGroup().name, parameters('environment'), parameters('location'))]",
               "metadata": {
                 "description": "Name of the logical SQL Server instance"
               }
@@ -347,6 +395,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "environment": {
+            "value": "dev"
           }
         },
         "template": {
@@ -356,7 +407,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "1148646232916192935"
+              "templateHash": "7488728525015803823"
             }
           },
           "parameters": {
@@ -367,16 +418,29 @@
                 "description": "Location where the databases are created"
               }
             },
+            "environment": {
+              "type": "string",
+              "defaultValue": "prod",
+              "allowedValues": [
+                "dev",
+                "test",
+                "qa",
+                "prod"
+              ],
+              "metadata": {
+                "description": "Environment in which the resources are deployed"
+              }
+            },
             "serverName": {
               "type": "string",
-              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "defaultValue": "[format('sql-{0}-{1}-{2}', resourceGroup().name, parameters('environment'), parameters('location'))]",
               "metadata": {
                 "description": "Name of the logical SQL Server instance"
               }
             },
             "sqlDBName": {
               "type": "string",
-              "defaultValue": "Sample DB1",
+              "defaultValue": "Customer1",
               "metadata": {
                 "description": "Name of the sql databases"
               }
@@ -386,7 +450,7 @@
             {
               "type": "Microsoft.Sql/servers/databases",
               "apiVersion": "2020-08-01-preview",
-              "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+              "name": "[format('{0}/sql-{1}-{2}', parameters('serverName'), parameters('sqlDBName'), parameters('environment'))]",
               "location": "[parameters('location')]",
               "sku": {
                 "name": "GP_S_Gen5",
@@ -420,6 +484,9 @@
           },
           "location": {
             "value": "[parameters('location')]"
+          },
+          "environment": {
+            "value": "dev"
           }
         },
         "template": {
@@ -429,7 +496,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "1148646232916192935"
+              "templateHash": "7488728525015803823"
             }
           },
           "parameters": {
@@ -440,16 +507,29 @@
                 "description": "Location where the databases are created"
               }
             },
+            "environment": {
+              "type": "string",
+              "defaultValue": "prod",
+              "allowedValues": [
+                "dev",
+                "test",
+                "qa",
+                "prod"
+              ],
+              "metadata": {
+                "description": "Environment in which the resources are deployed"
+              }
+            },
             "serverName": {
               "type": "string",
-              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "defaultValue": "[format('sql-{0}-{1}-{2}', resourceGroup().name, parameters('environment'), parameters('location'))]",
               "metadata": {
                 "description": "Name of the logical SQL Server instance"
               }
             },
             "sqlDBName": {
               "type": "string",
-              "defaultValue": "Sample DB1",
+              "defaultValue": "Customer1",
               "metadata": {
                 "description": "Name of the sql databases"
               }
@@ -459,7 +539,7 @@
             {
               "type": "Microsoft.Sql/servers/databases",
               "apiVersion": "2020-08-01-preview",
-              "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+              "name": "[format('{0}/sql-{1}-{2}', parameters('serverName'), parameters('sqlDBName'), parameters('environment'))]",
               "location": "[parameters('location')]",
               "sku": {
                 "name": "GP_S_Gen5",

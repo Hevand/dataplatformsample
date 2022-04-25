@@ -18,6 +18,7 @@ module appService './appservice/appservice.bicep' = {
   name: 'AppService-Deployment'
   params: {
     location: location
+    environment: 'dev'
   }
 }
 
@@ -27,6 +28,7 @@ module apimanagement './apimanagement/apimanagement.bicep' = {
     publisherEmail: publisheremail
     publisherName: publishername
     location: location    
+    environment: 'dev'
   }
 }
 
@@ -36,6 +38,7 @@ module sqlServer './sql/server.bicep' = {
     administratorLogin: sqlAdminUser
     administratorLoginPassword: sqlAdminPwd
     location: location
+    environment: 'dev'
   }
 }
 
@@ -47,6 +50,7 @@ module sqlDb1 './sql/database.bicep' = {
   params: {
     sqlDBName: 'Customer1'    
     location: location
+    environment: 'dev'
   }
 }
 
@@ -58,5 +62,6 @@ module sqlDb2 './sql/database.bicep' = {
   params: {
     sqlDBName: 'Customer2'    
     location: location
+    environment: 'dev'
   }
 }

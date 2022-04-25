@@ -22,8 +22,17 @@ param skuCount int = 1
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Environment in which the resources are deployed')
+@allowed([
+  'dev'
+  'test'
+  'qa'
+  'prod'
+])
+param environment string = 'prod'
+
 @description('The name of the API management instance')
-param name string = '${resourceGroup().name}-apim-${location}'
+param name string = 'apim-${resourceGroup().name}-${environment}'
 
 
 resource apiManagement 'Microsoft.ApiManagement/service@2020-12-01' = {

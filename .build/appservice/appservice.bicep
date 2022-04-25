@@ -1,11 +1,20 @@
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('Environment in which the resources are deployed')
+@allowed([
+  'dev'
+  'test'
+  'qa'
+  'prod'
+])
+param environment string = 'prod'
+
 @description('The name of the app service plan')
-param appServicePlanName string = toLower('${resourceGroup().name}-asp-${location}')
+param appServicePlanName string = toLower('asp-${resourceGroup().name}-${environment}-${location}-001')
 
 @description('The name of the web app')
-param webAppName string = toLower('${resourceGroup().name}-app-${location}')
+param webAppName string = toLower('app-${resourceGroup().name}-${environment}-001')
 
 @description('The SKU of the app service plan')
 @allowed([
@@ -40,7 +49,6 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
     name: sku
   }
 }
-
 
 resource webApp 'Microsoft.Web/sites@2021-03-01' = {
   name: webAppName
