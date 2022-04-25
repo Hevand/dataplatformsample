@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "11640341871304802049"
+      "templateHash": "8632169069504507445"
     }
   },
   "parameters": {
@@ -50,13 +50,20 @@
       "metadata": {
         "description": "Location for all resources."
       }
+    },
+    "name": {
+      "type": "string",
+      "defaultValue": "[format('{0}-apim-{1}', resourceGroup().name, parameters('location'))]",
+      "metadata": {
+        "description": "The name of the API management instance"
+      }
     }
   },
   "resources": [
     {
       "type": "Microsoft.ApiManagement/service",
       "apiVersion": "2020-12-01",
-      "name": "[format('apiservice{0}', uniqueString(resourceGroup().id))]",
+      "name": "[parameters('name')]",
       "location": "[parameters('location')]",
       "sku": {
         "name": "[parameters('sku')]",

@@ -22,8 +22,12 @@ param skuCount int = 1
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
+@description('The name of the API management instance')
+param name string = '${resourceGroup().name}-apim-${location}'
+
+
 resource apiManagement 'Microsoft.ApiManagement/service@2020-12-01' = {
-  name: 'apiservice${uniqueString(resourceGroup().id)}'
+  name: name
   location: location
   sku: {
     name: sku

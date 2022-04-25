@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "5447459879816999481"
+      "templateHash": "8930551539839185449"
     }
   },
   "parameters": {
@@ -44,29 +44,60 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "8356784254908314429"
+              "templateHash": "14139390549305298817"
             }
           },
           "parameters": {
             "location": {
               "type": "string",
-              "defaultValue": "[resourceGroup().location]"
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location for all resources."
+              }
             },
             "appServicePlanName": {
               "type": "string",
-              "defaultValue": "[toLower(format('{0}-asp-{1}', resourceGroup().name, parameters('location')))]"
+              "defaultValue": "[toLower(format('{0}-asp-{1}', resourceGroup().name, parameters('location')))]",
+              "metadata": {
+                "description": "The name of the app service plan"
+              }
             },
             "webAppName": {
               "type": "string",
-              "defaultValue": "[toLower(format('{0}-app-{1}', resourceGroup().name, parameters('location')))]"
+              "defaultValue": "[toLower(format('{0}-app-{1}', resourceGroup().name, parameters('location')))]",
+              "metadata": {
+                "description": "The name of the web app"
+              }
             },
             "sku": {
               "type": "string",
-              "defaultValue": "P1v2"
+              "defaultValue": "P1v2",
+              "allowedValues": [
+                "S1",
+                "S2",
+                "S3",
+                "P1v2",
+                "P2v2",
+                "P3v2",
+                "P1v3",
+                "P2v3",
+                "P3v3"
+              ],
+              "metadata": {
+                "description": "The SKU of the app service plan"
+              }
             },
             "linuxFxVersion": {
               "type": "string",
-              "defaultValue": "DOTNETCORE|6.0"
+              "defaultValue": "DOTNETCORE|6.0",
+              "allowedValues": [
+                "DOTNETCORE|3.1",
+                "DOTNETCORE|5.0",
+                "DOTNETCORE|6.0"
+              ],
+              "metadata": {
+                "description": "The Linux FX version"
+              }
             }
           },
           "resources": [
@@ -135,7 +166,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.5.6.12127",
-              "templateHash": "11640341871304802049"
+              "templateHash": "8632169069504507445"
             }
           },
           "parameters": {
@@ -180,13 +211,20 @@
               "metadata": {
                 "description": "Location for all resources."
               }
+            },
+            "name": {
+              "type": "string",
+              "defaultValue": "[format('{0}-apim-{1}', resourceGroup().name, parameters('location'))]",
+              "metadata": {
+                "description": "The name of the API management instance"
+              }
             }
           },
           "resources": [
             {
               "type": "Microsoft.ApiManagement/service",
               "apiVersion": "2020-12-01",
-              "name": "[format('apiservice{0}', uniqueString(resourceGroup().id))]",
+              "name": "[parameters('name')]",
               "location": "[parameters('location')]",
               "sku": {
                 "name": "[parameters('sku')]",

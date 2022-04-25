@@ -1,8 +1,34 @@
+@description('Location for all resources.')
 param location string = resourceGroup().location
-param sku string = 'P1v2'
-param linuxFxVersion = 'DOTNETCORE|6.0'
+
+@description('The name of the app service plan')
 param appServicePlanName string = toLower('${resourceGroup().name}-asp-${location}')
+
+@description('The name of the web app')
 param webAppName string = toLower('${resourceGroup().name}-app-${location}')
+
+@description('The SKU of the app service plan')
+@allowed([
+  'S1'
+  'S2'
+  'S3'
+  'P1v2'
+  'P2v2'
+  'P3v2'
+  'P1v3'
+  'P2v3'
+  'P3v3'
+])
+param sku string = 'P1v2'
+
+
+@description('The Linux FX version')
+@allowed([
+  'DOTNETCORE|3.1'
+  'DOTNETCORE|5.0'
+  'DOTNETCORE|6.0'
+])
+param linuxFxVersion string = 'DOTNETCORE|6.0'
 
 resource appServicePlan 'Microsoft.Web/serverfarms@2021-03-01' = {
   name: appServicePlanName
