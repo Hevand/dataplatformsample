@@ -5,21 +5,44 @@
     "_generator": {
       "name": "bicep",
       "version": "0.5.6.12127",
-      "templateHash": "8930551539839185449"
+      "templateHash": "9316566112516521078"
     }
   },
   "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location of the resources"
+      }
+    },
+    "sqlAdminUser": {
+      "type": "string",
+      "defaultValue": "[uniqueString(resourceGroup().id)]",
+      "metadata": {
+        "description": "SQL Server admin username"
+      }
+    },
+    "sqlAdminPwd": {
+      "type": "secureString",
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "SQL Server admin user password"
+      }
+    },
     "publisheremail": {
       "type": "string",
-      "defaultValue": "datamesh@sampleemail.com"
+      "defaultValue": "datamesh@sampleemail.com",
+      "metadata": {
+        "description": "API management publisher email"
+      }
     },
     "publishername": {
       "type": "string",
-      "defaultValue": "[resourceGroup().name]"
-    },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]"
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "API management publisher name"
+      }
     }
   },
   "resources": [
@@ -151,12 +174,6 @@
           },
           "location": {
             "value": "[parameters('location')]"
-          },
-          "sku": {
-            "value": "Developer"
-          },
-          "skuCount": {
-            "value": 1
           }
         },
         "template": {
@@ -241,6 +258,225 @@
           ]
         }
       }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "SQL-Server-Deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "administratorLogin": {
+            "value": "[parameters('sqlAdminUser')]"
+          },
+          "administratorLoginPassword": {
+            "value": "[parameters('sqlAdminPwd')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "11921905331842138621"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location where the databases are created"
+              }
+            },
+            "serverName": {
+              "type": "string",
+              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "metadata": {
+                "description": "Name of the logical SQL Server instance"
+              }
+            },
+            "administratorLogin": {
+              "type": "string",
+              "metadata": {
+                "description": "Admin username for SQL Server"
+              }
+            },
+            "administratorLoginPassword": {
+              "type": "secureString",
+              "metadata": {
+                "description": "Admin password for SQL Server"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers",
+              "apiVersion": "2019-06-01-preview",
+              "name": "[parameters('serverName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "SQL-Db-Customer1-Deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "sqlDBName": {
+            "value": "Customer1"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "1148646232916192935"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location where the databases are created"
+              }
+            },
+            "serverName": {
+              "type": "string",
+              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "metadata": {
+                "description": "Name of the logical SQL Server instance"
+              }
+            },
+            "sqlDBName": {
+              "type": "string",
+              "defaultValue": "Sample DB1",
+              "metadata": {
+                "description": "Name of the sql databases"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2020-08-01-preview",
+              "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 2
+              },
+              "properties": {
+                "sampleName": "AdventureWorksLT"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'SQL-Server-Deployment')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "SQL-Db-Customer2-Deployment",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "sqlDBName": {
+            "value": "Customer2"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.5.6.12127",
+              "templateHash": "1148646232916192935"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]",
+              "metadata": {
+                "description": "Location where the databases are created"
+              }
+            },
+            "serverName": {
+              "type": "string",
+              "defaultValue": "[format('{0}-dbs-{1}', resourceGroup().name, parameters('location'))]",
+              "metadata": {
+                "description": "Name of the logical SQL Server instance"
+              }
+            },
+            "sqlDBName": {
+              "type": "string",
+              "defaultValue": "Sample DB1",
+              "metadata": {
+                "description": "Name of the sql databases"
+              }
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Sql/servers/databases",
+              "apiVersion": "2020-08-01-preview",
+              "name": "[format('{0}/{1}', parameters('serverName'), parameters('sqlDBName'))]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "GP_S_Gen5",
+                "tier": "GeneralPurpose",
+                "family": "Gen5",
+                "capacity": 2
+              },
+              "properties": {
+                "sampleName": "AdventureWorksLT"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'SQL-Server-Deployment')]"
+      ]
     }
   ]
 }
