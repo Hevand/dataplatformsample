@@ -22,7 +22,6 @@ builder.Services.AddControllers().AddOData(options => options
     .Select()
     .Filter()
     .OrderBy()
-    //.AddRouteComponents("", GetModel())
     .AddRouteComponents("odata",GetModel())
 );
 
@@ -32,6 +31,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    
     app.UseSwagger();
     app.UseSwaggerUI();
 }
