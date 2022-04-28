@@ -1,7 +1,11 @@
+using api.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.Identity.Web;
+using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -14,7 +18,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //Added oData Service
-builder.Services.AddControllers().AddOData(options => options.Select().Filter().OrderBy());
+builder.Services.AddControllers().AddOData(options => options
+    .Select()
+    .Filter()
+    .OrderBy()
+    //.AddRouteComponents("", GetModel())
+    .AddRouteComponents("odata",GetModel())
+);
 
 
 var app = builder.Build();
@@ -33,3 +43,11 @@ app.MapControllers();
 app.UseODataRouteDebug();
 
 app.Run();
+
+
+IEdmModel GetModel()
+{
+    ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Order>("Orders");
+    return builder.GetEdmModel();
+}
