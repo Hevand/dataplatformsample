@@ -42,7 +42,7 @@ logout_uri    = "https://login.microsoftonline.com/logout.srf";
 
 scope_prefix = "api://isv-data-platform/";
 scopes = {
-    "access_as_a_user"
+    "User.Read"
 };
 
 
