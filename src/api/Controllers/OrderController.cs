@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OData.Query;
 
 namespace api.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class OrdersController : ControllerBase
