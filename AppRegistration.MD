@@ -1,4 +1,6 @@
-This is a desciption of the App Registration for the OData API (used by the PowerQuery Connector)
+# OData API App Registration
+
+This is a description of the App Registration for the OData API (used by the PowerQuery Connector)
 
 Goto Azure AD tenant
 
