@@ -67,6 +67,9 @@
     <Compile Include="resources.resx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="client_id">
+      <SubType>Content</SubType>
+    </Compile>
     <Content Include="pqconnector.query.pq">
       <SubType>Code</SubType>
     </Content>
