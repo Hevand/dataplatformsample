@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.OData.Query;
 
 namespace api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<OrdersController> _logger;
 
-        public OrdersController(ILogger<WeatherForecastController> logger)
+        public OrdersController(ILogger<OrdersController> logger)
         {
             _logger = logger;
         }
