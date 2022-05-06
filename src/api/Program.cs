@@ -2,6 +2,7 @@ using api.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
@@ -25,6 +26,7 @@ builder.Services.AddControllers().AddOData(options => options
     .AddRouteComponents("odata",GetModel())
 );
 
+builder.Services.AddDbContext<dbAdventureWorksContext>();
 
 var app = builder.Build();
 
@@ -48,6 +50,10 @@ app.Run();
 IEdmModel GetModel()
 {
     ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
+    builder.EntitySet<Address>("Addresses");
+    builder.EntitySet<Customer>("Customers");
+    builder.EntitySet<CustomerAddress>("CustomerAddresses");
     builder.EntitySet<Order>("Orders");
+
     return builder.GetEdmModel();
 }

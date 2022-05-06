@@ -41,7 +41,7 @@ namespace api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-               optionsBuilder.UseSqlServer(_config["sqlConnectionString"]);
+               optionsBuilder.UseSqlServer(_config["Connectionstrings:sqlConnectionString"]);
             }
         }
 
