@@ -4,7 +4,7 @@ section pqconnector;
 [DataSource.Kind="pqconnector", Publish="pqconnector.Publish"]
 shared pqconnector.Feed = () =>
     let
-        source = OData.Feed("https://localhost:7004/odata", null, [ ODataVersion = 4, MoreColumns = true ])
+        source = OData.Feed("https://localhost:7004/odata", null, [ ODataVersion = 4, MoreColumns = true, Implementation="2.0" ])
     in
         source;
 
