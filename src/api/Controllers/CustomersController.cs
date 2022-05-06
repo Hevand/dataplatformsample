@@ -30,7 +30,12 @@ namespace api.Controllers
         [EnableQuery]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
         {
-            string tenantId = User.Claims.Where(c => c.Type == "http://schemas.microsoft.com/identity/claims/tenantid").First().Value;
+            string tenantId = "";
+            var tenantIdClaims = User.Claims.Where(c => c.Type == "http://schemas.microsoft.com/identity/claims/tenantid");
+            if(tenantIdClaims.Any())
+            {
+                tenantId = tenantIdClaims.FirstOrDefault().Value;
+            }
             return await _context.Customers.ToListAsync();
         }
 
