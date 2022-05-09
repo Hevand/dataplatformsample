@@ -1,120 +1,73 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using api.ReadModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using api.Models;
 using Microsoft.AspNetCore.OData.Query;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
-    [Authorize]
-    [Route("[controller]")]
+    //[Authorize]
+    [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly dbAdventureWorksContext _context;
+        private readonly Models.dbAdventureWorksContext _context;
 
-        public CustomersController(dbAdventureWorksContext context)
+        public CustomersController(Models.dbAdventureWorksContext context)
         {
             _context = context;
-            
+
         }
-
-        // GET: api/Customers
-
+                
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<ReadModels.Customer>>> GetCustomers()
         {
             string tenantId = "";
             var tenantIdClaims = User.Claims.Where(c => c.Type == "http://schemas.microsoft.com/identity/claims/tenantid");
-            if(tenantIdClaims.Any())
+            if (tenantIdClaims.Any())
             {
                 tenantId = tenantIdClaims.FirstOrDefault().Value;
             }
-            return await _context.Customers.ToListAsync();
-        }
 
-        // GET: api/Customers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
+            var result = from c in _context.Customers
+                         select new ReadModels.Customer()
+                         {
+                             Id = c.CustomerId,
+                             FriendlyName = !string.IsNullOrEmpty(c.FirstName) ? c.FirstName : c.LastName,
+                             FullName = string.Join(" ", c.Title, c.FirstName, c.LastName, c.Suffix),
+                             EmailAddress = c.EmailAddress,
+                             BillingAddress = from a in c.CustomerAddresses
+                                              where a.Address != null 
+                                              && "MAIN OFFICE".Equals(a.AddressType, StringComparison.OrdinalIgnoreCase) 
+                                              select new CustomerAddress()
+                                              {
+                                                  AddressId = a.AddressId,
+                                                  AddressLine1 = a.Address.AddressLine1,
+                                                  AddressLine2 = a.Address.AddressLine2,
+                                                  City = a.Address.City,
+                                                  PostalCode = a.Address.PostalCode,
+                                                  CountryRegion = a.Address.CountryRegion,
+                                                  StateProvence = a.Address.StateProvince
+                                              },
 
-            if (customer == null)
-            {
-                return NotFound();
-            }
+                             ShippingAddress = from a in c.CustomerAddresses
+                                              where a.Address != null
+                                              && "SHIPPING".Equals(a.AddressType, StringComparison.OrdinalIgnoreCase)
+                                              select new CustomerAddress()
+                                              {
+                                                  AddressId = a.AddressId,
+                                                  AddressLine1 = a.Address.AddressLine1,
+                                                  AddressLine2 = a.Address.AddressLine2,
+                                                  City = a.Address.City,
+                                                  PostalCode = a.Address.PostalCode,
+                                                  CountryRegion = a.Address.CountryRegion,
+                                                  StateProvence = a.Address.StateProvince
+                                              }
+                         };
 
-            return customer;
-        }
-
-        // PUT: api/Customers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
-        {
-            if (id != customer.CustomerId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(customer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CustomerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Customers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
-        {
-            _context.Customers.Add(customer);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomer", new { id = customer.CustomerId }, customer);
-        }
-
-        // DELETE: api/Customers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(int id)
-        {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.CustomerId == id);
+            return await result.ToListAsync();
         }
     }
 }

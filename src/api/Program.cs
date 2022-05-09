@@ -1,5 +1,6 @@
 using api.Lib;
 using api.Models;
+using api.ReadModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
@@ -54,10 +55,8 @@ app.Run();
 IEdmModel GetModel()
 {
     ODataConventionModelBuilder builder = new ODataConventionModelBuilder();
-    builder.EntitySet<Address>("Addresses");
-    builder.EntitySet<Customer>("Customers");
-    builder.EntitySet<CustomerAddress>("CustomerAddresses");
-    builder.EntitySet<Order>("Orders");
+    builder.EntitySet<api.ReadModels.Customer>("Customers");
+    builder.EntitySet<api.ReadModels.Order>("Orders");
 
     return builder.GetEdmModel();
 }
