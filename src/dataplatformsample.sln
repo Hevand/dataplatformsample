@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "api", "api\api.csproj", "{5
 EndProject
 Project("{4DF76451-A46A-4C0B-BE03-459FAAFA07E6}") = "pqconnector", "pqconnector\pqconnector.mproj", "{0392EEB3-2BFD-4584-A4BE-9659DB2824C2}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "MasterDatabase", "MasterDatabase\MasterDatabase.sqlproj", "{8616F041-153C-4724-8E52-664CD5E90394}"
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "CatalogDb", "MasterDatabase\CatalogDb.sqlproj", "{8616F041-153C-4724-8E52-664CD5E90394}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

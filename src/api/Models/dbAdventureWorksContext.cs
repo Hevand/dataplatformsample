@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using api.Lib;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -9,16 +10,19 @@ namespace api.Models
     public partial class dbAdventureWorksContext : DbContext
     {
         private IConfiguration _config;
+        private ITenant _tenant;
 
-        public dbAdventureWorksContext(IConfiguration configuration)
+        public dbAdventureWorksContext(IConfiguration configuration, ITenant tenant)
         {
             _config = configuration;
+            _tenant = tenant;   
         }
 
-        public dbAdventureWorksContext(DbContextOptions<dbAdventureWorksContext> options, IConfiguration configuration)
+        public dbAdventureWorksContext(DbContextOptions<dbAdventureWorksContext> options, IConfiguration configuration, ITenant tenant)
             : base(options)
         {
             _config = configuration;
+            _tenant = tenant;
         }
 
         public virtual DbSet<Address> Addresses { get; set; } = null!;
@@ -41,7 +45,11 @@ namespace api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-               optionsBuilder.UseSqlServer(_config["Connectionstrings:sqlConnectionString"]);
+                //optionsBuilder.UseSqlServer(_config["Connectionstrings:sqlConnectionString"]);
+                
+
+
+                optionsBuilder.UseSqlServer(DataRouter.TenantDbConnectionString(_config["sqlConnectionString"], _tenant.GetTenantId()));
             }
         }
 

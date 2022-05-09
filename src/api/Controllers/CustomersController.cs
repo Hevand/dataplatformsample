@@ -22,6 +22,7 @@ namespace api.Controllers
         public CustomersController(dbAdventureWorksContext context)
         {
             _context = context;
+            
         }
 
         // GET: api/Customers
