@@ -1,3 +1,4 @@
+using api.Lib;
 using api.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -26,6 +27,9 @@ builder.Services.AddControllers().AddOData(options => options
     .AddRouteComponents("odata",GetModel())
 );
 
+
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddTransient<ITenant, Tenant>();
 builder.Services.AddDbContext<dbAdventureWorksContext>();
 
 var app = builder.Build();
