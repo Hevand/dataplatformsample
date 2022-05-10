@@ -10,19 +10,22 @@ namespace api.Models
     public partial class dbAdventureWorksContext : DbContext
     {
         private IConfiguration _config;
-        private ITenant _tenant;
+        private ITenantService _tenant;
+        private dbTenantAdminContext _context;
 
-        public dbAdventureWorksContext(IConfiguration configuration, ITenant tenant)
+        public dbAdventureWorksContext(dbTenantAdminContext context, IConfiguration configuration, ITenantService tenant)
         {
             _config = configuration;
-            _tenant = tenant;   
+            _tenant = tenant; 
+            _context = context;
         }
 
-        public dbAdventureWorksContext(DbContextOptions<dbAdventureWorksContext> options, IConfiguration configuration, ITenant tenant)
+        public dbAdventureWorksContext(dbTenantAdminContext context, DbContextOptions<dbAdventureWorksContext> options, IConfiguration configuration, ITenantService tenant)
             : base(options)
         {
             _config = configuration;
             _tenant = tenant;
+            _context = context;
         }
 
         public virtual DbSet<Address> Addresses { get; set; } = null!;
@@ -45,11 +48,7 @@ namespace api.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer(_config["Connectionstrings:sqlConnectionString"]);
-                
-
-
-                optionsBuilder.UseSqlServer(DataRouter.TenantDbConnectionString(_config["sqlConnectionString"], _tenant.GetTenantId()));
+                 optionsBuilder.UseSqlServer(DataRouter.TenantDbConnectionString(_context, _config["sqlConnectionString"], _tenant.GetTenantId()));
             }
         }
 

@@ -29,7 +29,8 @@ builder.Services.AddControllers().AddOData(options => options
 
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddTransient<ITenant, Tenant>();
+builder.Services.AddTransient<ITenantService, TenantService>();
+builder.Services.AddDbContext<dbTenantAdminContext>(); 
 builder.Services.AddDbContext<dbAdventureWorksContext>();
 
 var app = builder.Build();

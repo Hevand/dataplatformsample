@@ -1,6 +1,6 @@
 ﻿namespace api.Lib
 {
-    public interface ITenant
+    public interface ITenantService
     {
         public string GetTenantId();
     }

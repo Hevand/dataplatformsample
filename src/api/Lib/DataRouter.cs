@@ -1,48 +1,29 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using api.Models;
+using Microsoft.Data.SqlClient;
 
 namespace api.Lib
 {
     static public class DataRouter
     {
-        static public string TenantDbConnectionString(string MasterDbConnectionString, string TenantAadId)
+        static public string TenantDbConnectionString(dbTenantAdminContext context, string masterDbConnectionString, string tenantAadId)
         {
             string server = "";
             string database = "";
-                
 
-
-            SqlConnection sqlconn = new SqlConnection(MasterDbConnectionString);
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.Connection = sqlconn;
-            sqlCommand.CommandText = "SELECT * FROM Tenants WHERE tenant_aadtentantid = @id";
-
-            SqlParameter p = new SqlParameter();
-            p.ParameterName = "@id";
-            p.SqlDbType = System.Data.SqlDbType.NVarChar;
-            p.Value = TenantAadId;
-            sqlCommand.Parameters.Add(p);
-
-            sqlconn.Open();
-            using (SqlDataReader dr = sqlCommand.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
+            var tenant = context.Tenants.Where(t => t.TenantAadtentantid == tenantAadId).ToList();
+            if(tenant.Any())
             {
-                if (dr.HasRows)
-                {
-                    while (dr.Read())
-                    {
-                        server = dr["tenant_dbserver"].ToString();
-                        database = dr["tenant_dbname"].ToString();
-                    }
-                }
-                dr.Close();
+                server = tenant.First().TenantDbserver;
+                database = tenant.First().TenantDbname;
+                SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(masterDbConnectionString);
+                sb["Server"] = server;
+                sb.InitialCatalog = database;
+                return sb.ToString();
             }
-            
-
-            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(MasterDbConnectionString);
-            sb["Server"] = server;
-            sb.InitialCatalog = database;
-            return sb.ToString();
-
-            
+            else
+            {
+                throw new Exception("Tenant now found in TenantAdmin Database.");
+            }
         }
     }
 }
