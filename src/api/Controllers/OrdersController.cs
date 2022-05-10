@@ -22,7 +22,7 @@ namespace api.Controllers
 
         [HttpGet]
         [EnableQuery]
-        public async Task<ActionResult<IEnumerable<ReadModels.Order>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<ReadModels.Order>>> GetOrders()
         {
             string tenantId = "";
             var tenantIdClaims = User.Claims.Where(c => c.Type == "http://schemas.microsoft.com/identity/claims/tenantid");

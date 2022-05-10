@@ -31,6 +31,7 @@ namespace api.Controllers
                 tenantId = tenantIdClaims.FirstOrDefault().Value;
             }
 
+
             var result = from c in _context.Customers
                          select new ReadModels.Customer()
                          {
@@ -39,8 +40,8 @@ namespace api.Controllers
                              FullName = string.Join(" ", c.Title, c.FirstName, c.LastName, c.Suffix),
                              EmailAddress = c.EmailAddress,
                              BillingAddress = from a in c.CustomerAddresses
-                                              where a.Address != null 
-                                              && "MAIN OFFICE".Equals(a.AddressType, StringComparison.OrdinalIgnoreCase) 
+                                              where a.Address != null
+                                              && "MAIN OFFICE" == a.AddressType.ToUpper()
                                               select new CustomerAddress()
                                               {
                                                   AddressId = a.AddressId,
@@ -53,18 +54,18 @@ namespace api.Controllers
                                               },
 
                              ShippingAddress = from a in c.CustomerAddresses
-                                              where a.Address != null
-                                              && "SHIPPING".Equals(a.AddressType, StringComparison.OrdinalIgnoreCase)
-                                              select new CustomerAddress()
-                                              {
-                                                  AddressId = a.AddressId,
-                                                  AddressLine1 = a.Address.AddressLine1,
-                                                  AddressLine2 = a.Address.AddressLine2,
-                                                  City = a.Address.City,
-                                                  PostalCode = a.Address.PostalCode,
-                                                  CountryRegion = a.Address.CountryRegion,
-                                                  StateProvence = a.Address.StateProvince
-                                              }
+                                               where a.Address != null
+                                               && "SHIPPING" == a.AddressType.ToUpper()
+                                               select new CustomerAddress()
+                                               {
+                                                   AddressId = a.AddressId,
+                                                   AddressLine1 = a.Address.AddressLine1,
+                                                   AddressLine2 = a.Address.AddressLine2,
+                                                   City = a.Address.City,
+                                                   PostalCode = a.Address.PostalCode,
+                                                   CountryRegion = a.Address.CountryRegion,
+                                                   StateProvence = a.Address.StateProvince
+                                               }
                          };
 
             return await result.ToListAsync();
