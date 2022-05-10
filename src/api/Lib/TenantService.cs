@@ -1,10 +1,10 @@
 ﻿namespace api.Lib
 {
-    public class Tenant : ITenant
+    public class TenantService : ITenantService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public Tenant(IHttpContextAccessor httpContextAccessor) => 
+        public TenantService(IHttpContextAccessor httpContextAccessor) => 
             _httpContextAccessor = httpContextAccessor;
 
         public string GetTenantId()
