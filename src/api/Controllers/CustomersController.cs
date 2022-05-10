@@ -24,14 +24,6 @@ namespace api.Controllers
         [EnableQuery]
         public async Task<ActionResult<IEnumerable<ReadModels.Customer>>> GetCustomers()
         {
-            string tenantId = "";
-            var tenantIdClaims = User.Claims.Where(c => c.Type == "http://schemas.microsoft.com/identity/claims/tenantid");
-            if (tenantIdClaims.Any())
-            {
-                tenantId = tenantIdClaims.FirstOrDefault().Value;
-            }
-
-
             var result = from c in _context.Customers
                          select new ReadModels.Customer()
                          {
