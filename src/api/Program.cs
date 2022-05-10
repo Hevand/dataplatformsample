@@ -57,7 +57,6 @@ IEdmModel GetModel()
     builder.EntitySet<Address>("Addresses");
     builder.EntitySet<Customer>("Customers");
     builder.EntitySet<CustomerAddress>("CustomerAddresses");
-    builder.EntitySet<Order>("Orders");
 
     return builder.GetEdmModel();
 }
