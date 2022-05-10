@@ -22,7 +22,7 @@ namespace api.Lib
             }
             else
             {
-                throw new Exception("Tenant now found in TenantAdmin Database.");
+                throw new Exception("Tenant not found in TenantAdmin Database.");
             }
         }
     }
