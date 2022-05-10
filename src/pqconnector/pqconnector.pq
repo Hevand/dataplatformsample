@@ -85,7 +85,7 @@ TokenMethod = (grantType, tokenField, code) =>
     let
         queryString = [
             client_id = client_id,
-            scope = "offline_access api://isv-data-platform/access_as_a_user",
+            scope = "offline_access api://isv-data-platform/user.read",
             grant_type = grantType,
             redirect_uri = redirect_uri
         ],
