@@ -1,13 +1,16 @@
 ﻿// This file contains your Data Connector logic
 section pqconnector;
 
+
+// Using a variable endpoint (for development). When promoting to production, consider setting this as part of the release pipeline.
 [DataSource.Kind="pqconnector", Publish="pqconnector.Publish"]
-shared pqconnector.Feed = () =>
+shared pqconnector.Feed = Value.ReplaceType(pqconnectorImpl, type function(url as Uri.Type) as any);
+
+pqconnectorImpl = (url as text) => 
     let
-        source = OData.Feed("https://localhost:7004/odata", null, [ ODataVersion = 4, MoreColumns = true, Implementation="2.0" ])
+        source = OData.Feed(url, null, [ ODataVersion = 4, MoreColumns = true, Implementation="2.0" ])
     in
         source;
-
 
 // Data Source Kind description
 pqconnector = [

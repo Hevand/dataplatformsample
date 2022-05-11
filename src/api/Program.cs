@@ -31,12 +31,39 @@ builder.Services.AddControllers().AddOData(options => options
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ITenantService, TenantService>();
-builder.Services.AddDbContext<dbTenantAdminContext>(); 
+builder.Services.AddDbContext<dbTenantAdminContext>();
 builder.Services.AddDbContext<dbAdventureWorksContext>();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+// Challenge:   Natigate the odata model and operations, the basic URL must be valid.
+// Objective:   Use the hostname of the API Management gateway, if used.
+// Approach:    APIM to define host name as request header. Middleware to validate and update context.
+//              E.g. Forwarded: proto=https;host=temp.org/product/v2;"
+app.Use((context, next) =>
+{
+    if (context.Request.Headers.ContainsKey("Forwarded"))
+    {
+        IEnumerable<string> pairs = context.Request.Headers["Forwarded"].ToString().Split(';');
+
+        foreach(string pair in pairs)
+        {
+            if (pair.StartsWith("proto=", StringComparison.OrdinalIgnoreCase))
+            {
+                context.Request.Scheme = pair.Substring("proto=".Length);
+            }
+            else if (pair.StartsWith("host="))
+            {
+                context.Request.Host = new HostString(pair.Substring("host=".Length));
+            }
+        }
+    }
+    return next(context);
+});
+
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
